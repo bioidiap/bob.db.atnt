@@ -28,16 +28,16 @@ class ATNTDatabaseTest(unittest.TestCase):
 
   def test01_query(self):
     db = Database()
-    
+
     f = db.files()
     self.assertEqual(len(f.values()), 400) # number of all files in the database
 
     f = db.files(groups='world')
     self.assertEqual(len(f.values()), 200) # number of all training files
-   
+
     f = db.files(groups='dev')
     self.assertEqual(len(f.values()), 200) # number of all test files
-    
+
     f = db.files(groups='dev', purposes = 'enrol')
     self.assertEqual(len(f.values()), 100) # number of enrol files
 
@@ -46,14 +46,14 @@ class ATNTDatabaseTest(unittest.TestCase):
 
     f = db.clients()
     self.assertEqual(len(f), 40) # number of clients
-    
+
     f = db.clients(groups = 'world')
     self.assertEqual(len(f), 20) # number of training clients
 
     f = db.clients(groups = 'dev')
     self.assertEqual(len(f), 20) # number of test clients
 
-    f = db.files(groups = 'dev', purposes = 'enrol', client_ids = [3])
+    f = db.files(groups = 'dev', purposes = 'enrol', model_ids = [3])
     self.assertEqual(len(f), 5)
     keys = sorted(f.keys())
     values = sorted(list(db.m_enrol_files))
@@ -61,6 +61,10 @@ class ATNTDatabaseTest(unittest.TestCase):
       self.assertEqual(f[keys[i]], os.path.join("s3", str(values[i])))
       self.assertEqual(db.get_client_id_from_file_id(keys[i]), 3)
 
+    # when querying a probe file, the model id must be ignored.
+    f  = db.files(groups = 'dev', purposes = 'probe', model_ids = [3])
+    f2 = db.files(groups = 'dev', purposes = 'probe')
+    self.assertEqual(f,f2)
 
   def test02_manage_dumplist_1(self):
 
