@@ -29,20 +29,20 @@ class ATNTDatabaseTest(unittest.TestCase):
   def test01_query(self):
     db = Database()
 
-    f = db.files()
-    self.assertEqual(len(f.values()), 400) # number of all files in the database
+    f = db.objects()
+    self.assertEqual(len(f), 400) # number of all files in the database
 
-    f = db.files(groups='world')
-    self.assertEqual(len(f.values()), 200) # number of all training files
+    f = db.objects(groups='world')
+    self.assertEqual(len(f), 200) # number of all training files
 
-    f = db.files(groups='dev')
-    self.assertEqual(len(f.values()), 200) # number of all test files
+    f = db.objects(groups='dev')
+    self.assertEqual(len(f), 200) # number of all test files
 
-    f = db.files(groups='dev', purposes = 'enrol')
-    self.assertEqual(len(f.values()), 100) # number of enrol files
+    f = db.objects(groups='dev', purposes = 'enrol')
+    self.assertEqual(len(f), 100) # number of enrol files
 
-    f = db.files(groups='dev', purposes = 'probe')
-    self.assertEqual(len(f.values()), 100) # number of probe files
+    f = db.objects(groups='dev', purposes = 'probe')
+    self.assertEqual(len(f), 100) # number of probe files
 
     f = db.clients()
     self.assertEqual(len(f), 40) # number of clients
@@ -53,18 +53,19 @@ class ATNTDatabaseTest(unittest.TestCase):
     f = db.clients(groups = 'dev')
     self.assertEqual(len(f), 20) # number of test clients
 
-    f = db.files(groups = 'dev', purposes = 'enrol', model_ids = [3])
+    f = db.objects(groups = 'dev', purposes = 'enrol', model_ids = [3])
     self.assertEqual(len(f), 5)
-    keys = sorted(f.keys())
+
+    files = sorted(f, cmp=lambda x,y: cmp(x.id, y.id))
     values = sorted(list(db.m_enrol_files))
     for i in range(5):
-      self.assertEqual(f[keys[i]], os.path.join("s3", str(values[i])))
-      self.assertEqual(db.get_client_id_from_file_id(keys[i]), 3)
+      self.assertEqual(files[i].path, os.path.join("s3", str(values[i])))
+      self.assertEqual(db.get_client_id_from_file_id(files[i].id), 3)
 
     # when querying a probe file, the model id must be ignored.
-    f  = db.files(groups = 'dev', purposes = 'probe', model_ids = [3])
-    f2 = db.files(groups = 'dev', purposes = 'probe')
-    self.assertEqual(f,f2)
+    f  = db.objects(groups = 'dev', purposes = 'probe', model_ids = [3])
+    f2 = db.objects(groups = 'dev', purposes = 'probe')
+    self.assertEqual(set([x.id for x in f]),set([x.id for x in f2]))
 
   def test02_manage_dumplist_1(self):
 
