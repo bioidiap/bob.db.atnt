@@ -67,6 +67,21 @@ class ATNTDatabaseTest(unittest.TestCase):
     f2 = db.objects(groups = 'dev', purposes = 'probe')
     self.assertEqual(set([x.id for x in f]),set([x.id for x in f2]))
 
+    # test the path function
+    f = db.objects(groups='dev', purposes = 'enrol', model_ids = [7])
+    ids = [x.id for x in f]
+    paths = db.paths(ids, 'test', '.tmp')
+    self.assertEqual(len(f), len(paths))
+    for path in paths:
+      parts = os.path.split(path)
+      self.assertEqual(parts[0], os.path.join('test', 's7'))
+      self.assertEqual(os.path.splitext(parts[1])[1], '.tmp')
+
+    # test the reverse function
+    tested_ids = db.reverse(paths)
+    self.assertEqual(ids, tested_ids)
+
+
   def test02_manage_dumplist_1(self):
 
     from bob.db.script.dbmanage import main

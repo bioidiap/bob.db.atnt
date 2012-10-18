@@ -27,8 +27,6 @@ class Database(object):
   def __init__(self):
     self.m_groups = ('world', 'dev')
     self.m_purposes = ('enrol', 'probe')
-    self.m_client_ids = set(range(1, 41))
-    self.m_files = set(range(1, 11))
     self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
     self.m_enrol_files = set([2,4,5,7,9])
 
@@ -62,7 +60,7 @@ class Database(object):
     if 'world' in groups:
       ids |= self.m_training_clients
     if 'dev' in groups:
-      ids |= self.m_client_ids - self.m_training_clients
+      ids |= Client.m_valid_client_ids - self.m_training_clients
 
     return [Client(id) for id in ids]
 
@@ -85,7 +83,7 @@ class Database(object):
     if 'world' in groups:
       ids |= self.m_training_clients
     if 'dev' in groups:
-      ids |= self.m_client_ids - self.m_training_clients
+      ids |= Client.m_valid_client_ids - self.m_training_clients
 
     return sorted(list(ids))
 
@@ -122,7 +120,7 @@ class Database(object):
 
   def get_client_id_from_file_id(self, file_id):
     """Returns the client id from the given image id"""
-    return (file_id-1) / len(self.m_files) + 1
+    return File.from_file_id(file_id).client_id
 
 
   def get_client_id_from_model_id(self, model_id):
@@ -159,7 +157,7 @@ class Database(object):
     ids = set(self.client_ids(groups))
 
     # check the desired client ids for sanity
-    VALID_IDS = self.m_client_ids
+    VALID_IDS = Client.m_valid_client_ids
     model_ids = self.__check_validity__(model_ids, "model", VALID_IDS, VALID_IDS)
 
     # calculate the intersection between the ids and the desired client ids
@@ -181,7 +179,7 @@ class Database(object):
           retval.append(File(client_id, file_id))
 
     if 'probe' in purposes:
-      file_ids = self.m_files - self.m_enrol_files
+      file_ids = File.m_valid_file_ids - self.m_enrol_files
       # for probe, we use all clients of the given groups
       for client_id in self.client_ids(groups):
         for file_id in file_ids:
@@ -189,4 +187,42 @@ class Database(object):
 
     return retval
 
+
+  def paths(self, file_ids, prefix='', suffix=''):
+    """Returns a full file paths considering particular file ids, a given
+    directory and an extension
+
+    Keyword Parameters:
+
+    file_ids
+      The list of ids of the File objects in the database.
+
+    prefix
+      The bit of path to be prepended to the filename stem
+
+    suffix
+      The extension determines the suffix that will be appended to the filename
+      stem.
+
+    Returns a list (that may be empty) of the fully constructed paths given the
+    file ids.
+    """
+
+    files = [File.from_file_id(id) for id in file_ids]
+    return [f.make_path(prefix, suffix) for f in files]
+
+
+  def reverse(self, paths):
+    """Reverses the lookup: from certain stems, returning file ids
+
+    Keyword Parameters:
+
+    paths
+      The filename stems I'll query for. This object should be a python
+      iterable (such as a tuple or list)
+
+    Returns a list (that may be empty).
+    """
+
+    return [File.from_path(p).id for p in paths]
 

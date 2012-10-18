@@ -27,22 +27,45 @@ import bob
 
 class Client:
   """The clients of this database contain ONLY client ids. Nothing special."""
+  m_valid_client_ids = set(range(1, 41))
+
   def __init__(self, client_id):
+    assert client_id in self.m_valid_client_ids
     self.id = client_id
+
 
 
 class File:
   """Files of this database are composed from the client id and a file id."""
-  file_count_per_id = 10
+  m_valid_file_ids = set(range(1, 11))
 
   def __init__(self, client_id, client_file_id):
-    assert client_file_id in range(1, self.file_count_per_id + 1)
+    assert client_file_id in self.m_valid_file_ids
     # compute the file id on the fly
-    self.id = (client_id-1) * self.file_count_per_id + client_file_id
+    self.id = (client_id-1) * len(self.m_valid_file_ids) + client_file_id
     # copy client id
     self.client_id = client_id
     # generate path on the fly
     self.path = os.path.join("s" + str(client_id), str(client_file_id))
+
+
+  @staticmethod
+  def from_file_id(file_id):
+    """Returns the File object for a given file_id"""
+    client_id = (file_id-1) / len(File.m_valid_file_ids) + 1
+    client_file_id = (file_id-1) % len(File.m_valid_file_ids) + 1
+    return File(client_id, client_file_id)
+
+
+  @staticmethod
+  def from_path(path):
+    """Returns the File object for a given path"""
+    # get the last two paths
+    paths = os.path.split(path)
+    file_name = os.path.splitext(paths[1])[0]
+    paths = os.path.split(paths[0])
+    assert paths[1][0] == 's'
+    return File(int(paths[1][1:]), int(file_name))
 
 
   def make_path(self, directory=None, extension=None):
