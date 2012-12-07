@@ -19,26 +19,21 @@
 
 from .models import Client, File
 
-class Database(object):
+import xbob.db.verification.utils
+
+class Database(xbob.db.verification.utils.Database):
   """Wrapper class for the AT&T (aka ORL) database of faces (http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html).
   This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
   Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
   def __init__(self):
+    # call base class constructor
+    xbob.db.verification.utils.Database.__init__(self)
+    # initialize members
     self.m_groups = ('world', 'dev')
     self.m_purposes = ('enrol', 'probe')
     self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
     self.m_enrol_files = set([2,4,5,7,9])
-
-
-  def __check_validity__(self, l, obj, valid, default):
-    """Checks validity of user input data against a set of valid values."""
-    if not l: return default
-    elif isinstance(l, str) or isinstance(l, int): return self.__check_validity__([l], obj, valid, default)
-    for k in l:
-      if k not in valid:
-        raise RuntimeError, 'Invalid %s "%s". Valid values are %s, or lists/tuples of those' % (obj, k, valid)
-    return l
 
 
   def clients(self, groups = None, protocol = None):
@@ -53,8 +48,7 @@ class Database(object):
       Ignored.
     """
 
-    VALID_GROUPS = self.m_groups
-    groups = self.__check_validity__(groups, "group", VALID_GROUPS, VALID_GROUPS)
+    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
     ids = set()
     if 'world' in groups:
@@ -76,8 +70,7 @@ class Database(object):
       Ignored.
     """
 
-    VALID_GROUPS = self.m_groups
-    groups = self.__check_validity__(groups, "group", VALID_GROUPS, VALID_GROUPS)
+    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
     ids = set()
     if 'world' in groups:
@@ -150,25 +143,22 @@ class Database(object):
     """
 
     # check if groups set are valid
-    VALID_GROUPS = self.m_groups
-    groups = self.__check_validity__(groups, "group", VALID_GROUPS, VALID_GROUPS)
+    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
     # collect the ids to retrieve
     ids = set(self.client_ids(groups))
 
     # check the desired client ids for sanity
-    VALID_IDS = Client.m_valid_client_ids
-    model_ids = self.__check_validity__(model_ids, "model", VALID_IDS, VALID_IDS)
+    model_ids = self.check_parameters_for_validity(model_ids, "model", list(Client.m_valid_client_ids))
 
     # calculate the intersection between the ids and the desired client ids
     ids = ids & set(model_ids)
 
-    # check that the groups are valid
-    VALID_PURPOSES = self.m_purposes
+    # check that the purposes are valid
     if 'dev' in groups:
-      purposes = self.__check_validity__(purposes, "purpose", VALID_PURPOSES, VALID_PURPOSES)
+      purposes = self.check_parameters_for_validity(purposes, "purpose", self.m_purposes)
     else:
-      purposes = VALID_PURPOSES
+      purposes = self.m_purposes
 
 
     # go through the dataset and collect all desired files
