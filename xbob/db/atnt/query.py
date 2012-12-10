@@ -149,6 +149,8 @@ class Database(xbob.db.verification.utils.Database):
     ids = set(self.client_ids(groups))
 
     # check the desired client ids for sanity
+    if isinstance(model_ids,int):
+      model_ids = (model_ids,)
     model_ids = self.check_parameters_for_validity(model_ids, "model", list(Client.m_valid_client_ids))
 
     # calculate the intersection between the ids and the desired client ids

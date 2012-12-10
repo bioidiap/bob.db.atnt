@@ -82,14 +82,11 @@ class ATNTDatabaseTest(unittest.TestCase):
     self.assertEqual(ids, tested_ids)
 
 
-  def test02_manage_dumplist_1(self):
+  def test02_driver_api(self):
 
     from bob.db.script.dbmanage import main
 
     self.assertEqual(main('atnt dumplist --self-test'.split()), 0)
-
-  def test03_manage_checkfiles(self):
-
-    from bob.db.script.dbmanage import main
-
     self.assertEqual(main('atnt checkfiles -d "." --self-test'.split()), 0)
+
+

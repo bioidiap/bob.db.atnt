@@ -30,7 +30,11 @@ def dumplist(args):
   from .__init__ import Database
   db = Database()
 
-  r = db.objects(groups=args.groups, purposes=args.purposes, model_ids=args.client)
+  r = db.objects(
+      groups=args.group,
+      purposes=args.purpose,
+      model_ids=args.client
+  )
 
   output = sys.stdout
   if args.selftest:
@@ -48,7 +52,7 @@ def checkfiles(args):
   from .__init__ import Database
   db = Database()
 
-  r = db.objects(groups=args.groups, purposes=args.purposes, model_ids=args.client)
+  r = db.objects()
 
   # go through all files, check if they are available
   good = {}
@@ -94,30 +98,25 @@ class Interface(BaseInterface):
         "AT&T/ORL Face database", docs)
 
     from . import Database
+    from .models import Client
+    import argparse
 
     db = Database()
 
-    from argparse import SUPPRESS
-
-    from .models import Client
-
     # add the dumplist command
     dump_parser = subparsers.add_parser('dumplist', help="Dumps list of files based on your criteria")
-    dump_parser.add_argument('-d', '--directory', default=None, help="if given, this path will be prepended to every entry returned")
-    dump_parser.add_argument('-e', '--extension', default=None, help="if given, this extension will be appended to every entry returned")
-    dump_parser.add_argument('-C', '--client', dest="client", default=None, type=int, help="if given, limits the dump to a particular client (defaults to '%(default)s')", choices=Client.m_valid_client_ids)
-    dump_parser.add_argument('-g', '--groups', default=None, help="if given, this value will limit the output files to those belonging to a particular group.", choices=db.m_groups)
-    dump_parser.add_argument('-p', '--purposes', default=None, help="if given, this value will limit the output files to those belonging to a particular purpose.", choices=db.m_purposes)
-    dump_parser.add_argument('--self-test', dest="selftest", action='store_true', help=SUPPRESS)
+    dump_parser.add_argument('-d', '--directory', default='', help="if given, this path will be prepended to every entry returned.")
+    dump_parser.add_argument('-e', '--extension', default='', help="if given, this extension will be appended to every entry returned.")
+    dump_parser.add_argument('-C', '--client', type=int, help="if given, limits the dump to a particular client.", choices=Client.m_valid_client_ids)
+    dump_parser.add_argument('-g', '--group', help="if given, this value will limit the output files to those belonging to a particular group.", choices=db.m_groups)
+    dump_parser.add_argument('-p', '--purpose', help="if given, this value will limit the output files to those belonging to a particular purpose.", choices=db.m_purposes)
+    dump_parser.add_argument('--self-test', dest="selftest", action='store_true', help=argparse.SUPPRESS)
     dump_parser.set_defaults(func=dumplist) #action
 
     # add the checkfiles command
     check_parser = subparsers.add_parser('checkfiles', help="Check if the files exist, based on your criteria")
-    check_parser.add_argument('-d', '--directory', required=True, help="The path to the AT&T images")
-    check_parser.add_argument('-e', '--extension', default=".pgm", help="The extension of the AT&T images default: '.pgm'")
-    check_parser.add_argument('-C', '--client', dest="client", default=None, type=int, help="if given, limits the test to a particular client (defaults to '%(default)s')", choices=Client.m_valid_client_ids)
-    check_parser.add_argument('-g', '--groups', default=None, help="if given, this value will limit the tested files to those belonging to a particular group.", choices=db.m_groups)
-    check_parser.add_argument('-p', '--purposes', default=None, help="if given, this value will limit the tested files to those belonging to a particular purpose.", choices=db.m_purposes)
-    check_parser.add_argument('--self-test', dest="selftest", default=False, action='store_true', help=SUPPRESS)
+    check_parser.add_argument('-d', '--directory', required=True, help="the path to the AT&T images.")
+    check_parser.add_argument('-e', '--extension', default=".pgm", help="the extension of the AT&T images default: '.pgm'.")
+    check_parser.add_argument('--self-test', dest="selftest", action='store_true', help=argparse.SUPPRESS)
     check_parser.set_defaults(func=checkfiles) #action
 
