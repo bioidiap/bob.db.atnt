@@ -78,7 +78,7 @@ class ATNTDatabaseTest(unittest.TestCase):
       self.assertEqual(os.path.splitext(parts[1])[1], '.tmp')
 
     # test the reverse function
-    tested_ids = db.reverse(paths)
+    tested_ids = [f.id for f in db.reverse(paths)]
     self.assertEqual(ids, tested_ids)
 
 
@@ -88,5 +88,7 @@ class ATNTDatabaseTest(unittest.TestCase):
 
     self.assertEqual(main('atnt dumplist --self-test'.split()), 0)
     self.assertEqual(main('atnt checkfiles -d "." --self-test'.split()), 0)
+    self.assertEqual(main('atnt reverse s34/1 --self-test'.split()), 0)
+    self.assertEqual(main('atnt path 331 --self-test'.split()), 0)
 
 

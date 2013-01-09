@@ -180,7 +180,7 @@ class Database(xbob.db.verification.utils.Database):
     return retval
 
 
-  def paths(self, file_ids, prefix='', suffix=''):
+  def paths(self, file_ids, prefix=None, suffix=None, preserve_order=True):
     """Returns a full file paths considering particular file ids, a given
     directory and an extension
 
@@ -196,6 +196,9 @@ class Database(xbob.db.verification.utils.Database):
       The extension determines the suffix that will be appended to the filename
       stem.
 
+    preserve_order
+      Ignored since the order is always preserved.
+
     Returns a list (that may be empty) of the fully constructed paths given the
     file ids.
     """
@@ -204,17 +207,21 @@ class Database(xbob.db.verification.utils.Database):
     return [f.make_path(prefix, suffix) for f in files]
 
 
-  def reverse(self, paths):
-    """Reverses the lookup: from certain stems, returning file ids
+  def reverse(self, paths, preserve_order=True):
+    """Reverses the lookup: from certain paths, return a list of
+    File objects
 
     Keyword Parameters:
 
     paths
-      The filename stems I'll query for. This object should be a python
+      The filename stems to query for. This object should be a python
       iterable (such as a tuple or list)
+
+    preserve_order
+      Ignored since the order is always preserved.
 
     Returns a list (that may be empty).
     """
 
-    return [File.from_path(p).id for p in paths]
+    return [File.from_path(p) for p in paths]
 
