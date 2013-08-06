@@ -9,9 +9,9 @@ from setuptools import setup, find_packages
 setup(
 
     name='xbob.db.atnt',
-    version='1.1.0',
+    version='1.1.1',
     description='ATNT/ORL Database Access API for Bob',
-    url='http://github.com/bioidiap/bob.db.atnt',
+    url='http://github.com/bioidiap/xbob.db.atnt',
     license='GPLv3',
     author='Manuel Guenther',
     author_email='manuel.guenther@idiap.ch',
