@@ -54,7 +54,7 @@ class File (xbob.db.verification.utils.File):
   @staticmethod
   def from_file_id(file_id):
     """Returns the File object for a given file_id"""
-    client_id = (file_id-1) / len(File.m_valid_file_ids) + 1
+    client_id = int((file_id-1) / len(File.m_valid_file_ids) + 1)
     client_file_id = (file_id-1) % len(File.m_valid_file_ids) + 1
     return File(client_id, client_file_id)
 

@@ -56,7 +56,7 @@ class ATNTDatabaseTest(unittest.TestCase):
     f = db.objects(groups = 'dev', purposes = 'enrol', model_ids = [3])
     self.assertEqual(len(f), 5)
 
-    files = sorted(f, cmp=lambda x,y: cmp(x.id, y.id))
+    files = sorted(f, key=lambda x: x.id)
     values = sorted(list(db.m_enrol_files))
     for i in range(5):
       self.assertEqual(files[i].path, os.path.join("s3", str(values[i])))
