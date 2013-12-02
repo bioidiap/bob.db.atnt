@@ -35,6 +35,10 @@ class Database(xbob.db.verification.utils.Database):
     self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
     self.m_enrol_files = set([2,4,5,7,9])
 
+  def groups(self, protocol=None):
+    """Returns the names of all registered groups"""
+
+    return self.m_groups
 
   def clients(self, groups = None, protocol = None):
     """Returns the vector of clients used in a given group

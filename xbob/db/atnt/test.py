@@ -29,6 +29,9 @@ class ATNTDatabaseTest(unittest.TestCase):
   def test01_query(self):
     db = Database()
 
+    f = db.groups()
+    self.assertEqual(len(f), 2) # number of groups
+
     f = db.objects()
     self.assertEqual(len(f), 400) # number of all files in the database
 
