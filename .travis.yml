@@ -24,7 +24,7 @@ install:
 - python bootstrap.py
 - ./bin/buildout
 script:
-- ./bin/python -c 'from bob.db.iris import get_config; print(get_config())'
+- ./bin/python -c 'from bob.db.atnt import get_config; print(get_config())'
 - ./bin/coverage run --source=bob.db.atnt ./bin/nosetests -sv
 - ./bin/sphinx-build -b doctest doc sphinx
 - ./bin/sphinx-build -b html doc sphinx
