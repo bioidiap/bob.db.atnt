@@ -28,7 +28,7 @@ The package is available in two different distribution formats:
 1. You can download it from `PyPI <http://pypi.python.org/pypi>`_, or
 
 2. You can download it in its source form from `its git repository
-   <https://github.com/bioidiap/xbob.db.atnt>`_. When you download the
+   <https://github.com/bioidiap/bob.db.atnt>`_. When you download the
    version at the git repository, you will need to run a command to recreate
    the backend SQLite file required for its operation. This means that the
    database raw files must be installed somewhere in this case. With option
@@ -48,11 +48,11 @@ script)::
 
     install_requires=[
       ...
-      "xbob.db.atnt",
+      "bob.db.atnt",
     ],
 
 Proceed normally with your ``boostrap/buildout`` steps and you should be all
-set. That means you can now import the namespace ``xbob.db.atnt`` into your scripts.
+set. That means you can now import the namespace ``bob.db.atnt`` into your scripts.
 
 Modify your buildout.cfg and download from git
 ==============================================
@@ -68,8 +68,8 @@ lines::
   auto-checkout = *
   eggs = bob
          ...
-         xbob.db.atnt
+         bob.db.atnt
 
   [sources]
-  xbob.db.atnt = git https://github.com/bioidiap/xbob.db.atnt.git
+  bob.db.atnt = git https://github.com/bioidiap/bob.db.atnt.git
   ...
