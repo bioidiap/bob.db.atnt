@@ -19,16 +19,16 @@
 
 from .models import Client, File
 
-import xbob.db.verification.utils
+import bob.db.verification.utils
 
-class Database(xbob.db.verification.utils.Database):
+class Database(bob.db.verification.utils.Database):
   """Wrapper class for the AT&T (aka ORL) database of faces (http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html).
   This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
   Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
   def __init__(self):
     # call base class constructor
-    xbob.db.verification.utils.Database.__init__(self)
+    bob.db.verification.utils.Database.__init__(self)
     # initialize members
     self.m_groups = ('world', 'dev')
     self.m_purposes = ('enrol', 'probe')

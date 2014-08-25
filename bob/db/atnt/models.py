@@ -19,13 +19,13 @@
 
 """
 This file defines simple Client and File interfaces that should be comparable
-with other xbob.db databases.
+with other bob.db databases.
 """
 
 import os
 import bob
 
-import xbob.db.verification.utils
+import bob.db.verification.utils
 
 class Client:
   """The clients of this database contain ONLY client ids. Nothing special."""
@@ -37,7 +37,7 @@ class Client:
 
 
 
-class File (xbob.db.verification.utils.File):
+class File (bob.db.verification.utils.File):
   """Files of this database are composed from the client id and a file id."""
   m_valid_file_ids = set(range(1, 11))
 
@@ -48,7 +48,7 @@ class File (xbob.db.verification.utils.File):
     # generate path on the fly
     path = os.path.join("s" + str(client_id), str(client_file_id))
     # call base class constructor
-    xbob.db.verification.utils.File.__init__(self, client_id = client_id, file_id = file_id, path = path)
+    bob.db.verification.utils.File.__init__(self, client_id = client_id, file_id = file_id, path = path)
 
 
   @staticmethod

@@ -87,7 +87,7 @@ class ATNTDatabaseTest(unittest.TestCase):
 
   def test02_driver_api(self):
 
-    from bob.db.script.dbmanage import main
+    from bob.db.base.script.dbmanage import main
 
     self.assertEqual(main('atnt dumplist --self-test'.split()), 0)
     self.assertEqual(main('atnt checkfiles -d "." --self-test'.split()), 0)
