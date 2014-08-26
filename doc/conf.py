@@ -7,7 +7,6 @@
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3 of the License.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -40,7 +39,7 @@ extensions = [
   'sphinx.ext.autosummary',
   'sphinx.ext.doctest',
   'sphinx.ext.intersphinx',
-  'bob.sphinxext.plot', # ours add source copying to install directory
+#  'bob.sphinxext.plot', # ours add source copying to install directory
   ]
 
 # The viewcode extension appeared only on Sphinx >= 1.0.0
@@ -151,7 +150,7 @@ html_favicon = ''
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.

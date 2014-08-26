@@ -26,9 +26,21 @@ class Database(bob.db.verification.utils.Database):
   This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
   Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
-  def __init__(self):
+  def __init__(self, original_directory = None, original_extension = '.pgm'):
+    """**Constructor Documentation**
+
+    Generates a database.
+
+    Keyword parameters
+
+    original_directory : str, optional
+      The directory, where you extracted the original images to.
+
+    original_extension : str
+      The filename extension of the original images. Rarely changed.
+    """
     # call base class constructor
-    bob.db.verification.utils.Database.__init__(self)
+    bob.db.verification.utils.Database.__init__(self, original_directory=original_directory, original_extension=original_extension)
     # initialize members
     self.m_groups = ('world', 'dev')
     self.m_purposes = ('enrol', 'probe')
