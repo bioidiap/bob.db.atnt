@@ -47,23 +47,28 @@ class Database(bob.db.verification.utils.Database):
     self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
     self.m_enrol_files = set([2,4,5,7,9])
 
-  def groups(self, protocol=None):
-    """Returns the names of all registered groups"""
+  def groups(self, protocol = None):
+    """Returns the names of all registered groups
 
+    Keyword parameters:
+
+    protocol
+      ignored.
+    """
     return self.m_groups
+
 
   def clients(self, groups = None, protocol = None):
     """Returns the vector of clients used in a given group
 
     Keyword Parameters:
 
-    groups
+    groups : str or [str]
       One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
     protocol
       Ignored.
     """
-
     groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
     ids = set()
@@ -79,7 +84,7 @@ class Database(bob.db.verification.utils.Database):
 
     Keyword Parameters:
 
-    groups
+    groups : str or [str]
       One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
     protocol
@@ -102,7 +107,7 @@ class Database(bob.db.verification.utils.Database):
 
     Keyword Parameters:
 
-    groups
+    groups : str or [str]
       One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
     protocol
@@ -117,7 +122,7 @@ class Database(bob.db.verification.utils.Database):
 
     Keyword Parameters:
 
-    groups
+    groups : str or [str]
       One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
     protocol
@@ -127,28 +132,53 @@ class Database(bob.db.verification.utils.Database):
     return self.client_ids(groups, protocol)
 
 
-  def get_client_id_from_file_id(self, file_id):
-    """Returns the client id from the given image id"""
+  def get_client_id_from_file_id(self, file_id, groups = None, protocol = None):
+    """Returns the client id from the given image id.
+
+    Keyword Parameters:
+
+    file_id : int
+      The ID of the :py:class:`File` object to get the client id for
+
+    groups
+      ignored.
+
+    protocol
+      ignored.
+    """
     return File.from_file_id(file_id).client_id
 
 
-  def get_client_id_from_model_id(self, model_id):
-    """Returns the client id from the given model id"""
+  def get_client_id_from_model_id(self, model_id, groups = None, protocol = None):
+    """Returns the client id from the given model id.
+    Since client and model ids are identical, the model id is returned.
+
+    Keyword Parameters:
+
+    model_id : int
+      The id of the model.
+
+    groups
+      ignored.
+
+    protocol
+      ignored.
+    """
     return model_id
 
 
-  def objects(self, model_ids=None, groups=None, purposes=None, protocol=None):
+  def objects(self, model_ids = None, groups = None, purposes = None, protocol = None):
     """Returns a set of File objects for the specific query by the user.
 
     Keyword Parameters:
 
-    model_ids
+    model_ids : int or [int]
       The ids of the clients whose files need to be retrieved. Should be a list of integral numbers from [1,40]
 
-    groups
+    groups : str or [str]
       One of the groups 'world' or 'dev' or a list with both of them (which is the default).
 
-    purposes
+    purposes : str or [str]
       One of the purposes 'enrol' or 'probe' or a list with both of them (which is the default).
       This field is ignored when the group 'world' is selected.
 
@@ -196,23 +226,23 @@ class Database(bob.db.verification.utils.Database):
     return retval
 
 
-  def paths(self, file_ids, prefix=None, suffix=None, preserve_order=True):
+  def paths(self, file_ids, prefix = None, suffix = None, preserve_order=True):
     """Returns a full file paths considering particular file ids, a given
     directory and an extension
 
     Keyword Parameters:
 
-    file_ids
+    file_ids : int or [int]
       The list of ids of the File objects in the database.
 
-    prefix
+    prefix : str
       The bit of path to be prepended to the filename stem
 
-    suffix
+    suffix : str
       The extension determines the suffix that will be appended to the filename
       stem.
 
-    preserve_order
+    preserve_order : bool
       Ignored since the order is always preserved.
 
     Returns a list (that may be empty) of the fully constructed paths given the
@@ -229,11 +259,11 @@ class Database(bob.db.verification.utils.Database):
 
     Keyword Parameters:
 
-    paths
+    paths : [str]
       The filename stems to query for. This object should be a python
       iterable (such as a tuple or list)
 
-    preserve_order
+    preserve_order : bool
       Ignored since the order is always preserved.
 
     Returns a list (that may be empty).
