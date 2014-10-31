@@ -43,9 +43,9 @@ class Database(bob.db.verification.utils.Database):
     bob.db.verification.utils.Database.__init__(self, original_directory=original_directory, original_extension=original_extension)
     # initialize members
     self.m_groups = ('world', 'dev')
-    self.m_purposes = ('enrol', 'probe')
+    self.m_purposes = ('enroll', 'probe')
     self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
-    self.m_enrol_files = set([2,4,5,7,9])
+    self.m_enroll_files = set([2,4,5,7,9])
 
   def groups(self, protocol = None):
     """Returns the names of all registered groups
@@ -179,7 +179,7 @@ class Database(bob.db.verification.utils.Database):
       One of the groups 'world' or 'dev' or a list with both of them (which is the default).
 
     purposes : str or [str]
-      One of the purposes 'enrol' or 'probe' or a list with both of them (which is the default).
+      One of the purposes 'enroll' or 'probe' or a list with both of them (which is the default).
       This field is ignored when the group 'world' is selected.
 
     protocol
@@ -211,13 +211,13 @@ class Database(bob.db.verification.utils.Database):
 
     # go through the dataset and collect all desired files
     retval = []
-    if 'enrol' in purposes:
+    if 'enroll' in purposes:
       for client_id in ids:
-        for file_id in self.m_enrol_files:
+        for file_id in self.m_enroll_files:
           retval.append(File(client_id, file_id))
 
     if 'probe' in purposes:
-      file_ids = File.m_valid_file_ids - self.m_enrol_files
+      file_ids = File.m_valid_file_ids - self.m_enroll_files
       # for probe, we use all clients of the given groups
       for client_id in self.client_ids(groups):
         for file_id in file_ids:

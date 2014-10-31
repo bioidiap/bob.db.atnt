@@ -34,20 +34,14 @@ setup(
     ],
 
     entry_points={
-
       # declare database to bob
       'bob.db': [
         'atnt = bob.db.atnt.driver:Interface',
       ],
-
-      # declare tests to bob
-      'bob.test': [
-        'atnt = bob.db.atnt.test:ATNTDatabaseTest',
-      ],
-
     },
 
     classifiers = [
+      'Framework :: Bob',
       'Development Status :: 4 - Beta',
       'Intended Audience :: Developers',
       'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',

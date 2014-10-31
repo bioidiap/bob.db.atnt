@@ -41,8 +41,8 @@ class ATNTDatabaseTest(unittest.TestCase):
     f = db.objects(groups='dev')
     self.assertEqual(len(f), 200) # number of all test files
 
-    f = db.objects(groups='dev', purposes = 'enrol')
-    self.assertEqual(len(f), 100) # number of enrol files
+    f = db.objects(groups='dev', purposes = 'enroll')
+    self.assertEqual(len(f), 100) # number of enroll files
 
     f = db.objects(groups='dev', purposes = 'probe')
     self.assertEqual(len(f), 100) # number of probe files
@@ -56,11 +56,11 @@ class ATNTDatabaseTest(unittest.TestCase):
     f = db.clients(groups = 'dev')
     self.assertEqual(len(f), 20) # number of test clients
 
-    f = db.objects(groups = 'dev', purposes = 'enrol', model_ids = [3])
+    f = db.objects(groups = 'dev', purposes = 'enroll', model_ids = [3])
     self.assertEqual(len(f), 5)
 
     files = sorted(f, key=lambda x: x.id)
-    values = sorted(list(db.m_enrol_files))
+    values = sorted(list(db.m_enroll_files))
     for i in range(5):
       self.assertEqual(files[i].path, os.path.join("s3", str(values[i])))
       self.assertEqual(db.get_client_id_from_file_id(files[i].id), 3)
@@ -71,7 +71,7 @@ class ATNTDatabaseTest(unittest.TestCase):
     self.assertEqual(set([x.id for x in f]),set([x.id for x in f2]))
 
     # test the path function
-    f = db.objects(groups='dev', purposes = 'enrol', model_ids = [7])
+    f = db.objects(groups='dev', purposes = 'enroll', model_ids = [7])
     ids = [x.id for x in f]
     paths = db.paths(ids, 'test', '.tmp')
     self.assertEqual(len(f), len(paths))

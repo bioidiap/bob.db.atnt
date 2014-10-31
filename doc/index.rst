@@ -10,10 +10,6 @@
 
 This module contains the interface to query the face verification protocol for the AT&T database of faces (formerly known as the ORL face database).
 
-.. note::
-  This protocol interface does not include the original image data.
-  Please download the data yourself from http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html
-
 .. warning::
   The AT&T Database of Faces is a small, old and outdated facial image database.
   According to [LiJain2005]_, the *algorithm performance over this database has been saturated*.
