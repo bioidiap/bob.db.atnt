@@ -16,7 +16,7 @@ This package only contains the Bob_ accessor methods to use the DB directly from
 The Database Interface
 ----------------------
 
-The `AT&T`_ database complies with the standard biometric verification database as described in :ref:`commons`, implementing the interface :py:class:`bob.db.verification.utils.Database`.
+The :py:class:`bob.db.atnt.Database` complies with the standard biometric verification database as described in :ref:`commons`, implementing the interface :py:class:`bob.db.verification.utils.Database`.
 
 .. todo::
    Explain the particularities of the :py:class:`bob.db.atnt.Database`.
