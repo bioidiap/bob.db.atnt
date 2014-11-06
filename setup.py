@@ -4,12 +4,15 @@
 
 from setuptools import setup, find_packages
 
+# Define package version
+version = open("version.txt").read().rstrip()
+
 # The only thing we do in this file is to call the setup() function with all
 # parameters that define our package.
 setup(
 
     name='bob.db.atnt',
-    version='2.0.0a0',
+    version=version,
     description='ATNT/ORL Database Access API for Bob',
     url='http://github.com/bioidiap/bob.db.atnt',
     license='GPLv3',
