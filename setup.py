@@ -2,7 +2,11 @@
 # vim: set fileencoding=utf-8 :
 # Manuel Guenther <manuel.guenther@idiap.ch>
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages, dist
+dist.Distribution(dict(setup_requires=['bob.extension']))
+
+from bob.extension.utils import load_requirements
+install_requires = load_requirements()
 
 # Define package version
 version = open("version.txt").read().rstrip()
@@ -25,18 +29,14 @@ setup(
     include_package_data=True,
     zip_safe=False,
 
-    install_requires=[
-      'setuptools',
-      'bob.db.base',
-      'bob.db.verification.utils' # defines a set of utilities for face verification databases like this one.
-    ],
+    install_requires = install_requires,
 
     namespace_packages = [
       'bob',
       'bob.db',
     ],
 
-    entry_points={
+    entry_points = {
       # declare database to bob
       'bob.db': [
         'atnt = bob.db.atnt.driver:Interface',
