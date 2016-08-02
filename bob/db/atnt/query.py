@@ -19,255 +19,246 @@
 
 from .models import Client, File
 
-import bob.db.verification.utils
+import bob.db.base
 
-class Database(bob.db.verification.utils.Database):
-  """Wrapper class for the AT&T (aka ORL) database of faces (http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html).
-  This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
-  Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
-  def __init__(self, original_directory = None, original_extension = '.pgm'):
-    """**Constructor Documentation**
+class Database(bob.db.base.Database):
+    """Wrapper class for the AT&T (aka ORL) database of faces (http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html).
+    This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
+    Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
-    Generates a database.
+    def __init__(self, original_directory=None, original_extension='.pgm'):
+        """**Constructor Documentation**
 
-    Keyword parameters
+        Generates a database.
 
-    original_directory : str, optional
-      The directory, where you extracted the original images to.
+        Keyword parameters
 
-    original_extension : str
-      The filename extension of the original images. Rarely changed.
-    """
-    # call base class constructor
-    bob.db.verification.utils.Database.__init__(self, original_directory=original_directory, original_extension=original_extension)
-    # initialize members
-    self.m_groups = ('world', 'dev')
-    self.m_purposes = ('enroll', 'probe')
-    self.m_training_clients = set([1,2,5,6,10,11,12,14,16,17,20,21,24,26,27,29,33,34,36,39])
-    self.m_enroll_files = set([2,4,5,7,9])
+        original_directory : str, optional
+          The directory, where you extracted the original images to.
 
-  def groups(self, protocol = None):
-    """Returns the names of all registered groups
+        original_extension : str
+          The filename extension of the original images. Rarely changed.
+        """
+        self.original_directory = original_directory
+        self.original_extension = original_extension
+        # initialize members
+        self.m_groups = ('world', 'dev')
+        self.m_purposes = ('enroll', 'probe')
+        self.m_training_clients = set([1, 2, 5, 6, 10, 11, 12, 14, 16, 17, 20, 21, 24, 26, 27, 29, 33, 34, 36, 39])
+        self.m_enroll_files = set([2, 4, 5, 7, 9])
 
-    Keyword parameters:
+    def groups(self, protocol=None):
+        """Returns the names of all registered groups
 
-    protocol
-      ignored.
-    """
-    return self.m_groups
+        Keyword parameters:
 
+        protocol
+          ignored.
+        """
+        return self.m_groups
 
-  def clients(self, groups = None, protocol = None):
-    """Returns the vector of clients used in a given group
+    def clients(self, groups=None, protocol=None):
+        """Returns the vector of clients used in a given group
 
-    Keyword Parameters:
+        Keyword Parameters:
 
-    groups : str or [str]
-      One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
+        groups : str or [str]
+          One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
-    protocol
-      Ignored.
-    """
-    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
+        protocol
+          Ignored.
+        """
+        groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
-    ids = set()
-    if 'world' in groups:
-      ids |= self.m_training_clients
-    if 'dev' in groups:
-      ids |= Client.m_valid_client_ids - self.m_training_clients
+        ids = set()
+        if 'world' in groups:
+            ids |= self.m_training_clients
+        if 'dev' in groups:
+            ids |= Client.m_valid_client_ids - self.m_training_clients
 
-    return [Client(id) for id in ids]
+        return [Client(id) for id in ids]
 
-  def client_ids(self, groups = None, protocol = None):
-    """Returns the vector of ids of the clients used in a given group
+    def client_ids(self, groups=None, protocol=None):
+        """Returns the vector of ids of the clients used in a given group
 
-    Keyword Parameters:
+        Keyword Parameters:
 
-    groups : str or [str]
-      One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
+        groups : str or [str]
+          One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
-    protocol
-      Ignored.
-    """
+        protocol
+          Ignored.
+        """
 
-    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
+        groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
-    ids = set()
-    if 'world' in groups:
-      ids |= self.m_training_clients
-    if 'dev' in groups:
-      ids |= Client.m_valid_client_ids - self.m_training_clients
+        ids = set()
+        if 'world' in groups:
+            ids |= self.m_training_clients
+        if 'dev' in groups:
+            ids |= Client.m_valid_client_ids - self.m_training_clients
 
-    return sorted(list(ids))
+        return sorted(list(ids))
 
+    def models(self, groups=None, protocol=None):
+        """Returns the vector of models ( == clients ) used in a given group
 
-  def models(self, groups = None, protocol = None):
-    """Returns the vector of models ( == clients ) used in a given group
+        Keyword Parameters:
 
-    Keyword Parameters:
+        groups : str or [str]
+          One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
-    groups : str or [str]
-      One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
+        protocol
+          Ignored.
+        """
 
-    protocol
-      Ignored.
-    """
+        return self.clients(groups, protocol)
 
-    return self.clients(groups, protocol)
+    def model_ids(self, groups=None, protocol=None):
+        """Returns the vector of ids of the models (i.e., the client ids) used in a given group
 
+        Keyword Parameters:
 
-  def model_ids(self, groups = None, protocol = None):
-    """Returns the vector of ids of the models (i.e., the client ids) used in a given group
+        groups : str or [str]
+          One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
 
-    Keyword Parameters:
+        protocol
+          Ignored.
+        """
 
-    groups : str or [str]
-      One of the groups 'world', 'dev' or a tuple with both of them (which is the default).
+        return self.client_ids(groups, protocol)
 
-    protocol
-      Ignored.
-    """
+    def get_client_id_from_file_id(self, file_id, groups=None, protocol=None):
+        """Returns the client id from the given image id.
 
-    return self.client_ids(groups, protocol)
+        Keyword Parameters:
 
+        file_id : int
+          The ID of the :py:class:`File` object to get the client id for
 
-  def get_client_id_from_file_id(self, file_id, groups = None, protocol = None):
-    """Returns the client id from the given image id.
+        groups
+          ignored.
 
-    Keyword Parameters:
+        protocol
+          ignored.
+        """
+        return File.from_file_id(file_id).client_id
 
-    file_id : int
-      The ID of the :py:class:`File` object to get the client id for
+    def get_client_id_from_model_id(self, model_id, groups=None, protocol=None):
+        """Returns the client id from the given model id.
+        Since client and model ids are identical, the model id is returned.
 
-    groups
-      ignored.
+        Keyword Parameters:
 
-    protocol
-      ignored.
-    """
-    return File.from_file_id(file_id).client_id
+        model_id : int
+          The id of the model.
 
+        groups
+          ignored.
 
-  def get_client_id_from_model_id(self, model_id, groups = None, protocol = None):
-    """Returns the client id from the given model id.
-    Since client and model ids are identical, the model id is returned.
+        protocol
+          ignored.
+        """
+        return model_id
 
-    Keyword Parameters:
+    def objects(self, model_ids=None, groups=None, purposes=None, protocol=None):
+        """Returns a set of File objects for the specific query by the user.
 
-    model_id : int
-      The id of the model.
+        Keyword Parameters:
 
-    groups
-      ignored.
+        model_ids : int or [int]
+          The ids of the clients whose files need to be retrieved. Should be a list of integral numbers from [1,40]
 
-    protocol
-      ignored.
-    """
-    return model_id
+        groups : str or [str]
+          One of the groups 'world' or 'dev' or a list with both of them (which is the default).
 
+        purposes : str or [str]
+          One of the purposes 'enroll' or 'probe' or a list with both of them (which is the default).
+          This field is ignored when the group 'world' is selected.
 
-  def objects(self, model_ids = None, groups = None, purposes = None, protocol = None):
-    """Returns a set of File objects for the specific query by the user.
+        protocol
+          Ignored.
 
-    Keyword Parameters:
+        Returns: A list of File's considering all the filtering criteria.
+        """
 
-    model_ids : int or [int]
-      The ids of the clients whose files need to be retrieved. Should be a list of integral numbers from [1,40]
+        # check if groups set are valid
+        groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
 
-    groups : str or [str]
-      One of the groups 'world' or 'dev' or a list with both of them (which is the default).
+        # collect the ids to retrieve
+        ids = set(self.client_ids(groups))
 
-    purposes : str or [str]
-      One of the purposes 'enroll' or 'probe' or a list with both of them (which is the default).
-      This field is ignored when the group 'world' is selected.
+        # check the desired client ids for sanity
+        if isinstance(model_ids, int):
+            model_ids = (model_ids,)
+        model_ids = self.check_parameters_for_validity(model_ids, "model", list(Client.m_valid_client_ids))
 
-    protocol
-      Ignored.
+        # calculate the intersection between the ids and the desired client ids
+        ids = ids & set(model_ids)
 
-    Returns: A list of File's considering all the filtering criteria.
-    """
+        # check that the purposes are valid
+        if 'dev' in groups:
+            purposes = self.check_parameters_for_validity(purposes, "purpose", self.m_purposes)
+        else:
+            purposes = self.m_purposes
 
-    # check if groups set are valid
-    groups = self.check_parameters_for_validity(groups, "group", self.m_groups)
+        # go through the dataset and collect all desired files
+        retval = []
+        if 'enroll' in purposes:
+            for client_id in ids:
+                for file_id in self.m_enroll_files:
+                    retval.append(File(client_id, file_id))
 
-    # collect the ids to retrieve
-    ids = set(self.client_ids(groups))
+        if 'probe' in purposes:
+            file_ids = File.m_valid_file_ids - self.m_enroll_files
+            # for probe, we use all clients of the given groups
+            for client_id in self.client_ids(groups):
+                for file_id in file_ids:
+                    retval.append(File(client_id, file_id))
 
-    # check the desired client ids for sanity
-    if isinstance(model_ids,int):
-      model_ids = (model_ids,)
-    model_ids = self.check_parameters_for_validity(model_ids, "model", list(Client.m_valid_client_ids))
+        return retval
 
-    # calculate the intersection between the ids and the desired client ids
-    ids = ids & set(model_ids)
+    def paths(self, file_ids, prefix=None, suffix=None, preserve_order=True):
+        """Returns a full file paths considering particular file ids, a given
+        directory and an extension
 
-    # check that the purposes are valid
-    if 'dev' in groups:
-      purposes = self.check_parameters_for_validity(purposes, "purpose", self.m_purposes)
-    else:
-      purposes = self.m_purposes
+        Keyword Parameters:
 
+        file_ids : int or [int]
+          The list of ids of the File objects in the database.
 
-    # go through the dataset and collect all desired files
-    retval = []
-    if 'enroll' in purposes:
-      for client_id in ids:
-        for file_id in self.m_enroll_files:
-          retval.append(File(client_id, file_id))
+        prefix : str
+          The bit of path to be prepended to the filename stem
 
-    if 'probe' in purposes:
-      file_ids = File.m_valid_file_ids - self.m_enroll_files
-      # for probe, we use all clients of the given groups
-      for client_id in self.client_ids(groups):
-        for file_id in file_ids:
-          retval.append(File(client_id, file_id))
+        suffix : str
+          The extension determines the suffix that will be appended to the filename
+          stem.
 
-    return retval
+        preserve_order : bool
+          Ignored since the order is always preserved.
 
+        Returns a list (that may be empty) of the fully constructed paths given the
+        file ids.
+        """
 
-  def paths(self, file_ids, prefix = None, suffix = None, preserve_order=True):
-    """Returns a full file paths considering particular file ids, a given
-    directory and an extension
+        files = [File.from_file_id(id) for id in file_ids]
+        return [f.make_path(prefix, suffix) for f in files]
 
-    Keyword Parameters:
+    def reverse(self, paths, preserve_order=True):
+        """Reverses the lookup: from certain paths, return a list of
+        File objects
 
-    file_ids : int or [int]
-      The list of ids of the File objects in the database.
+        Keyword Parameters:
 
-    prefix : str
-      The bit of path to be prepended to the filename stem
+        paths : [str]
+          The filename stems to query for. This object should be a python
+          iterable (such as a tuple or list)
 
-    suffix : str
-      The extension determines the suffix that will be appended to the filename
-      stem.
+        preserve_order : bool
+          Ignored since the order is always preserved.
 
-    preserve_order : bool
-      Ignored since the order is always preserved.
+        Returns a list (that may be empty).
+        """
 
-    Returns a list (that may be empty) of the fully constructed paths given the
-    file ids.
-    """
-
-    files = [File.from_file_id(id) for id in file_ids]
-    return [f.make_path(prefix, suffix) for f in files]
-
-
-  def reverse(self, paths, preserve_order=True):
-    """Reverses the lookup: from certain paths, return a list of
-    File objects
-
-    Keyword Parameters:
-
-    paths : [str]
-      The filename stems to query for. This object should be a python
-      iterable (such as a tuple or list)
-
-    preserve_order : bool
-      Ignored since the order is always preserved.
-
-    Returns a list (that may be empty).
-    """
-
-    return [File.from_path(p) for p in paths]
-
+        return [File.from_path(p) for p in paths]
