@@ -110,55 +110,55 @@ stages:
 # -------------
 
 # Linux + Python 2.7: Builds, tests, uploads wheel and deploys (if needed)
-#build_linux_27:
-#  <<: *build_job
-#  variables: &linux_27_build_variables
-#    PYTHON_VERSION: "2.7"
-#    WHEEL_TAG: "py27"
-#  tags:
-#    - conda-linux
+build_linux_27:
+  <<: *build_job
+  variables: &linux_27_build_variables
+    PYTHON_VERSION: "2.7"
+    WHEEL_TAG: "py27"
+  tags:
+    - conda-linux
 
-#test_linux_27:
-#  <<: *test_job
-#  variables: *linux_27_build_variables
-#  dependencies:
-#    - build_linux_27
-#  tags:
-#    - conda-linux
+test_linux_27:
+  <<: *test_job
+  variables: *linux_27_build_variables
+  dependencies:
+    - build_linux_27
+  tags:
+    - conda-linux
 
-#wheels_linux_27:
-#  <<: *wheels_job
-#  variables: *linux_27_build_variables
-#  dependencies:
-#    - build_linux_27
-#  tags:
-#    - conda-linux
+wheels_linux_27:
+  <<: *wheels_job
+  variables: *linux_27_build_variables
+  dependencies:
+    - build_linux_27
+  tags:
+    - conda-linux
 
-#deploy_linux_27:
-#  <<: *deploy_job
-#  variables: *linux_27_build_variables
-#  dependencies:
-#    - build_linux_27
-#  tags:
-#    - conda-linux
+deploy_linux_27:
+  <<: *deploy_job
+  variables: *linux_27_build_variables
+  dependencies:
+    - build_linux_27
+  tags:
+    - conda-linux
 
 
 # Linux + Python 3.4: Builds and tests
-#build_linux_34:
-#  <<: *build_job
-#  variables: &linux_34_build_variables
-#    PYTHON_VERSION: "3.4"
-#    WHEEL_TAG: "py3"
-#  tags:
-#    - conda-linux
+build_linux_34:
+  <<: *build_job
+  variables: &linux_34_build_variables
+    PYTHON_VERSION: "3.4"
+    WHEEL_TAG: "py3"
+  tags:
+    - conda-linux
 
-#test_linux_34:
-#  <<: *test_job
-#  variables: *linux_34_build_variables
-#  dependencies:
-#    - build_linux_34
-#  tags:
-#    - conda-linux
+test_linux_34:
+  <<: *test_job
+  variables: *linux_34_build_variables
+  dependencies:
+    - build_linux_34
+  tags:
+    - conda-linux
 
 
 # Linux + Python 3.5: Builds, tests and uploads wheel
