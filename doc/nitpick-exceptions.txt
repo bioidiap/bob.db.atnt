@@ -1,0 +1,2 @@
+#Issue with python 2 https://github.com/sphinx-doc/sphinx/issues/1034
+py:exc ValueError
