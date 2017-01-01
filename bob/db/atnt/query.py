@@ -1,21 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# @author: Manuel Guenther <Manuel.Guenther@idiap.ch>
-# @date: Wed Oct 17 15:59:25 CEST 2012
-#
-# Copyright (C) 2011-2012 Idiap Research Institute, Martigny, Switzerland
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3 of the License.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 from .models import Client, File
 
@@ -163,12 +148,15 @@ class Database(bob.db.base.Database):
         return model_id
 
     def objects(self, model_ids=None, groups=None, purposes=None, protocol=None):
-        """Returns a set of File objects for the specific query by the user.
+        """Returns a set of :py:class:`File` objects for the specific query by the user.
 
         Keyword Parameters:
 
         model_ids : int or [int]
-          The ids of the clients whose files need to be retrieved. Should be a list of integral numbers from [1,40]
+          Limits the returned files relevant to this model id.
+          This is expected to be used with groups='dev' only.
+          When groups='world', this does not have any effect.
+          Should be a list of integral numbers from [1,40]
 
         groups : str or [str]
           One of the groups 'world' or 'dev' or a list with both of them (which is the default).
@@ -180,7 +168,7 @@ class Database(bob.db.base.Database):
         protocol
           Ignored.
 
-        Returns: A list of File's considering all the filtering criteria.
+        Returns: A list of :py:class:`File` objects considering all the filtering criteria.
         """
 
         # check if groups set are valid
