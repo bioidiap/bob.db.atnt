@@ -1,21 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
-# @author: Manuel Guenther <Manuel.Guenther@idiap.ch>
-# @date: Wed Oct 17 15:59:25 CEST 2012
-#
-# Copyright (C) 2011-2012 Idiap Research Institute, Martigny, Switzerland
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, version 3 of the License.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 """
 This file defines simple Client and File interfaces that should be comparable
@@ -26,13 +11,15 @@ import os
 import bob
 
 import bob.db.base
+import bob.io.image  # to be able to load images when File.load is called!
 
 
-class Client:
+class Client(object):
     """The clients of this database contain ONLY client ids. Nothing special."""
     m_valid_client_ids = set(range(1, 41))
 
     def __init__(self, client_id):
+        super(Client, self).__init__()
         assert client_id in self.m_valid_client_ids
         self.id = client_id
 
