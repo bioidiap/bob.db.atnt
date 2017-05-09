@@ -76,7 +76,7 @@ point to their relative location w.r.t. a database root directory:
 .. doctest:: interface
 
    >>> f = db.objects()[0]
-   >>> type(f)
+   >>> type(f) #doctest: +ELLIPSIS
    <class 'bob.db.atnt.models.File'>
    >>> f.path # doctest: +ELLIPSIS
    's1/9'
