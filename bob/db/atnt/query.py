@@ -1,18 +1,16 @@
 #!/usr/bin/env python
 # vim: set fileencoding=utf-8 :
 
-
-from .models import Client, File
+from .models import Client, File, DEFAULT_DATADIR
 
 import bob.db.base
-
 
 class Database(bob.db.base.Database):
     """Wrapper class for the AT&T (aka ORL) database of faces (http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html).
     This class defines a simple protocol for training, enrollment and probe by splitting the few images of the database in a reasonable manner.
     Due to the small size of the database, there is only a 'dev' group, and I did not define an 'eval' group."""
 
-    def __init__(self, original_directory=None, original_extension='.pgm'):
+    def __init__(self, original_directory=DEFAULT_DATADIR, original_extension='.pgm'):
         """**Constructor Documentation**
 
         Generates a database.
@@ -20,7 +18,8 @@ class Database(bob.db.base.Database):
         Keyword parameters
 
         original_directory : str, optional
-          The directory, where you extracted the original images to.
+          The directory, where you extracted the original images to. If not
+          provided, then use a directory internal to the package (``data``)
 
         original_extension : str
           The filename extension of the original images. Rarely changed.
@@ -128,7 +127,8 @@ class Database(bob.db.base.Database):
         protocol
           ignored.
         """
-        return File.from_file_id(file_id).client_id
+        return File._from_file_id(file_id, self.original_directory,
+            self.original_extension).client_id
 
     def get_client_id_from_model_id(self, model_id, groups=None, protocol=None):
         """Returns the client id from the given model id.
@@ -196,16 +196,19 @@ class Database(bob.db.base.Database):
         if 'enroll' in purposes:
             for client_id in ids:
                 for file_id in self.m_enroll_files:
-                    retval.append(File(client_id, file_id))
+                    retval.append(File(client_id, file_id,
+                      self.original_directory, self.original_extension))
 
         if 'probe' in purposes:
             file_ids = File.m_valid_file_ids - self.m_enroll_files
             # for probe, we use all clients of the given groups
             for client_id in self.client_ids(groups):
                 for file_id in file_ids:
-                    retval.append(File(client_id, file_id))
+                    retval.append(File(client_id, file_id,
+                      self.original_directory, self.original_extension))
 
         return retval
+
 
     def paths(self, file_ids, prefix=None, suffix=None, preserve_order=True):
         """Returns a full file paths considering particular file ids, a given
@@ -230,8 +233,9 @@ class Database(bob.db.base.Database):
         file ids.
         """
 
-        files = [File.from_file_id(id) for id in file_ids]
+        files = [File._from_file_id(id, self.original_directory, self.original_extension) for id in file_ids]
         return [f.make_path(prefix, suffix) for f in files]
+
 
     def reverse(self, paths, preserve_order=True):
         """Reverses the lookup: from certain paths, return a list of
@@ -249,4 +253,4 @@ class Database(bob.db.base.Database):
         Returns a list (that may be empty).
         """
 
-        return [File.from_path(p) for p in paths]
+        return [File._from_path(p, self.original_directory, self.original_extension) for p in paths]

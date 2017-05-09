@@ -7,7 +7,9 @@
 
 import os
 import sys
+import pkg_resources
 from bob.db.base.driver import Interface as BaseInterface
+
 
 def dumplist(args):
   """Dumps lists of files based on your criteria."""
@@ -35,17 +37,11 @@ def dumplist(args):
 def checkfiles(args):
   """Checks the existence of the files based on your criteria."""
 
-  from .__init__ import Database
+  from . import Database
   db = Database()
 
-  r = db.objects()
-
   # go through all files, check if they are available
-  good = {}
-  bad = {}
-  for f in r:
-    if os.path.exists(f.make_path(directory=args.directory, extension=args.extension)): good[f.id] = f.make_path(directory=args.directory, extension=args.extension)
-    else: bad[f.id] = f.make_path(directory=args.directory, extension=args.extension)
+  bad = [f for f in db.objects() if not os.path.exists(f.make_path(directory=args.directory, extension=args.extension))]
 
   # report
   output = sys.stdout
@@ -55,9 +51,9 @@ def checkfiles(args):
 
   if bad:
     for f in bad:
-      output.write('Cannot find file "%s"\n' % (f,))
+      output.write('Cannot find file "%s"\n' % f.make_path(directory=args.directory, extension=args.extension))
     output.write('%d files (out of %d) were not found at "%s"\n' % \
-        (len(bad), len(r), args.directory))
+        (len(bad), len(db.objects()), args.directory))
 
   return 0
 
@@ -100,6 +96,53 @@ def path(args):
   return 0
 
 
+def download(arguments):
+  """Downloads and uncompresses the AT&T database"""
+
+  """
+  Parameters:
+
+    arguments (argparse.Namespace): A set of arguments passed by the
+      command-line parser
+
+
+  Returns:
+
+    int: A POSIX compliant return value of ``0`` if the download is successful,
+    or ``1`` in case it is not.
+
+
+  Raises:
+
+    urllib2.HTTPError: if the target resource does not exist on the webserver
+
+  """
+
+  source_url = 'http://www.cl.cam.ac.uk/research/dtg/attarchive/pub/data/att_faces.zip'
+
+  import tempfile
+  import zipfile
+  if sys.version_info[0] <= 2:
+    import urllib2 as urllib
+  else:
+    import urllib.request as urllib
+
+  if not arguments.quiet:
+    print ("Extracting url `%s' into `%s'" %(source_url, arguments.output_dir))
+  u = urllib.urlopen(source_url)
+  f = tempfile.NamedTemporaryFile(suffix = ".zip")
+  open(f.name, 'wb').write(u.read())
+  z = zipfile.ZipFile(f, mode='r')
+  members = z.infolist()
+  for k,m in enumerate(members):
+    if not arguments.quiet:
+      print("x [%d/%d] %s" % (k+1, len(members), m.filename,))
+    z.extract(m, arguments.output_dir)
+  z.close()
+  f.close()
+
+  return 0
+
 
 class Interface(BaseInterface):
 
@@ -107,7 +150,6 @@ class Interface(BaseInterface):
     return 'atnt'
 
   def version(self):
-    import pkg_resources  # part of setuptools
     return pkg_resources.require('bob.db.%s' % self.name())[0].version
 
   def files(self):
@@ -140,9 +182,10 @@ class Interface(BaseInterface):
     dump_parser.set_defaults(func=dumplist) #action
 
     # add the checkfiles command
+    from .models import DEFAULT_DATADIR
     check_parser = subparsers.add_parser('checkfiles', help="Check if the files exist, based on your criteria")
-    check_parser.add_argument('-d', '--directory', required=True, help="the path to the AT&T images.")
-    check_parser.add_argument('-e', '--extension', default=".pgm", help="the extension of the AT&T images default: '.pgm'.")
+    check_parser.add_argument('-d', '--directory', default=DEFAULT_DATADIR, help="the path to the AT&T images [default: %(default)s]")
+    check_parser.add_argument('-e', '--extension', default=".pgm", help="the extension of the AT&T images [default: %(default)s]")
     check_parser.add_argument('--self-test', dest="selftest", action='store_true', help=argparse.SUPPRESS)
     check_parser.set_defaults(func=checkfiles) #action
 
@@ -160,3 +203,8 @@ class Interface(BaseInterface):
     parser.add_argument('--self-test', dest="selftest", action='store_true', help=argparse.SUPPRESS)
     parser.set_defaults(func=path) #action
 
+    # adds the "download" command
+    parser = subparsers.add_parser('download', help=download.__doc__)
+    parser.add_argument('-o', "--output-dir", help='the directory where to extract the AT&T database at [default: %(default)s]', default=DEFAULT_DATADIR)
+    parser.add_argument('-q', "--quiet", action='store_true', help='if set, do it quietly', default=False)
+    parser.set_defaults(func=download)
