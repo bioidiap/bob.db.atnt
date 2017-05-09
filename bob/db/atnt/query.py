@@ -127,7 +127,8 @@ class Database(bob.db.base.Database):
         protocol
           ignored.
         """
-        return File._from_file_id(file_id).client_id
+        return File._from_file_id(file_id, self.original_directory,
+            self.original_extension).client_id
 
     def get_client_id_from_model_id(self, model_id, groups=None, protocol=None):
         """Returns the client id from the given model id.
@@ -232,7 +233,7 @@ class Database(bob.db.base.Database):
         file ids.
         """
 
-        files = [File._from_file_id(id) for id in file_ids]
+        files = [File._from_file_id(id, self.original_directory, self.original_extension) for id in file_ids]
         return [f.make_path(prefix, suffix) for f in files]
 
 
@@ -252,4 +253,4 @@ class Database(bob.db.base.Database):
         Returns a list (that may be empty).
         """
 
-        return [File._from_path(p) for p in paths]
+        return [File._from_path(p, self.original_directory, self.original_extension) for p in paths]
