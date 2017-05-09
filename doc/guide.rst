@@ -107,7 +107,7 @@ using the :py:meth:`bob.db.atnt.File.load` method:
 .. doctest:: interface
 
    >>> image = f.load()
-   >>> type(image)
+   >>> type(image) #doctest: +ELLIPSIS
    <class 'numpy.ndarray'>
    >>> image.shape
    (112, 92)
