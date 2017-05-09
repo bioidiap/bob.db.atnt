@@ -77,9 +77,9 @@ point to their relative location w.r.t. a database root directory:
 
    >>> f = db.objects()[0]
    >>> type(f) #doctest: +ELLIPSIS
-   <class 'bob.db.atnt.models.File'>
+   <... 'bob.db.atnt.models.File'>
    >>> f.path # doctest: +ELLIPSIS
-   's1/9'
+   '...'
 
 
 You may use the method :py:meth:`bob.db.atnt.File.make_path` to construct paths
@@ -108,7 +108,7 @@ using the :py:meth:`bob.db.atnt.File.load` method:
 
    >>> image = f.load()
    >>> type(image) #doctest: +ELLIPSIS
-   <class 'numpy.ndarray'>
+   <... 'numpy.ndarray'>
    >>> image.shape
    (112, 92)
    >>> image.dtype
