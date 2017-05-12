@@ -98,8 +98,8 @@ return path. For example:
 
 .. doctest:: interface
 
-   >>> f.make_path('/another/path', '.hdf5')
-   '/another/path/s1/9.hdf5'
+   >>> f.make_path('/another/path', '.hdf5') #doctest: +ELLIPSIS
+   '/another/path/....hdf5'
 
 You may load the contents of the image file pointed by this database entry
 using the :py:meth:`bob.db.atnt.File.load` method:
