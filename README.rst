@@ -5,10 +5,10 @@
    :target: http://pythonhosted.org/bob.db.atnt/index.html
 .. image:: http://img.shields.io/badge/docs-latest-orange.svg
    :target: https://www.idiap.ch/software/bob/docs/latest/bob/bob.db.atnt/master/index.html
-.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/master/build.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/master
-.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/master/coverage.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/master
+.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/v2.0.9/build.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/v2.0.9
+.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/v2.0.9/coverage.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/v2.0.9
 .. image:: https://img.shields.io/badge/gitlab-project-0000c0.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.atnt
 .. image:: http://img.shields.io/pypi/v/bob.db.atnt.svg
