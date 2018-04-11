@@ -1,14 +1,14 @@
 .. vim: set fileencoding=utf-8 :
 .. Tue 16 Aug 11:17:03 CEST 2016
 
-.. image:: http://img.shields.io/badge/docs-v2.0.11-yellow.svg
-   :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.atnt/v2.0.11/index.html
+.. image:: http://img.shields.io/badge/docs-stable-yellow.svg
+   :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.atnt/stable/index.html
 .. image:: http://img.shields.io/badge/docs-latest-orange.svg
    :target: https://www.idiap.ch/software/bob/docs/bob/bob.db.atnt/master/index.html
-.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/v2.0.11/build.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/v2.0.11
-.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/v2.0.11/coverage.svg
-   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/v2.0.11
+.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/master/build.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/master
+.. image:: https://gitlab.idiap.ch/bob/bob.db.atnt/badges/master/coverage.svg
+   :target: https://gitlab.idiap.ch/bob/bob.db.atnt/commits/master
 .. image:: https://img.shields.io/badge/gitlab-project-0000c0.svg
    :target: https://gitlab.idiap.ch/bob/bob.db.atnt
 .. image:: http://img.shields.io/pypi/v/bob.db.atnt.svg
