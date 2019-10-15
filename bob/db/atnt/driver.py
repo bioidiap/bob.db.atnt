@@ -9,6 +9,7 @@ import os
 import sys
 import pkg_resources
 from bob.db.base.driver import Interface as BaseInterface
+from bob.extension.download import download_and_unzip
 
 
 def dumplist(args):
@@ -118,28 +119,13 @@ def download(arguments):
 
   """
 
-  source_url = 'http://www.idiap.ch/software/bob/data/bob/att_faces.zip'
+  source_url = ['http://bobconda.lab.idiap.ch/public/data/bob/att_faces.zip',
+                'http://www.idiap.ch/software/bob/data/bob/att_faces.zip'
+               ]
 
-  import tempfile
-  import zipfile
-  if sys.version_info[0] <= 2:
-    import urllib2 as urllib
-  else:
-    import urllib.request as urllib
-
-  if not arguments.quiet:
-    print ("Extracting url `%s' into `%s'" %(source_url, arguments.output_dir))
-  u = urllib.urlopen(source_url)
-  f = tempfile.NamedTemporaryFile(suffix = ".zip")
-  open(f.name, 'wb').write(u.read())
-  z = zipfile.ZipFile(f, mode='r')
-  members = z.infolist()
-  for k,m in enumerate(members):
-    if not arguments.quiet:
-      print("x [%d/%d] %s" % (k+1, len(members), m.filename,))
-    z.extract(m, arguments.output_dir)
-  z.close()
-  f.close()
+  if not os.path.exists(arguments.output_dir):
+    os.mkdir(arguments.output_dir)
+    download_and_unzip(source_url, os.path.join(arguments.output_dir, "att_faces.zip"))
 
   return 0
 
