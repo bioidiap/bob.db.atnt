@@ -118,7 +118,7 @@ def download(arguments):
 
   """
 
-  source_url = 'https://www.idiap.ch/software/bob/data/bob/att_faces.zip'
+  source_url = 'http://www.idiap.ch/software/bob/data/bob/att_faces.zip'
 
   import tempfile
   import zipfile
