@@ -119,9 +119,7 @@ def download(arguments):
 
   """
 
-  source_url = ['http://bobconda.lab.idiap.ch/public/data/bob/att_faces.zip',
-                'http://www.idiap.ch/software/bob/data/bob/att_faces.zip'
-               ]
+  source_url = ['http://www.idiap.ch/software/bob/data/bob/att_faces.zip']
 
   if not os.path.exists(arguments.output_dir):
     os.mkdir(arguments.output_dir)
