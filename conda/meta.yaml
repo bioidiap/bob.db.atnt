@@ -14,8 +14,8 @@ build:
     {% if environ.get('BUILD_EGG') %}
     - "{{ PYTHON }} setup.py sdist --formats=zip"
     {% endif %}
-    - bob_dbmanage.py {{ name.replace('bob.db.', '') }} download
     - "{{ PYTHON }} -m pip install . -vv"
+    - bob_dbmanage.py {{ name.replace('bob.db.', '') }} download
 
 requirements:
   host:
